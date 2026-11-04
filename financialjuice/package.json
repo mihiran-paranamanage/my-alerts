@@ -1,9 +1,9 @@
 {
-  "name": "market-news-alert",
+  "name": "financialjuice-alert",
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "scripts": {
     "poll": "node scripts/poll.mjs"

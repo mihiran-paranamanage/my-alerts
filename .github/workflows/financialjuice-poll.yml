@@ -1,4 +1,4 @@
-name: Poll financialjuice for market-moving news
+name: financialjuice - poll for market-moving news
 
 on:
   schedule:
@@ -9,18 +9,21 @@ permissions:
   contents: write
 
 concurrency:
-  group: fj-poll
+  group: financialjuice-poll
   cancel-in-progress: false
 
 jobs:
   poll:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: financialjuice
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Run poller
         env:
@@ -34,5 +37,5 @@ jobs:
           git config user.name "fj-news-bot"
           git config user.email "actions@users.noreply.github.com"
           git add state.json
-          git diff --quiet --cached || git commit -m "Update last seen headline ID"
+          git diff --quiet --cached || git commit -m "financialjuice: update last seen headline ID"
           git push
