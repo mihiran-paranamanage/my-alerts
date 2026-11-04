@@ -1,0 +1,38 @@
+name: Poll financialjuice for market-moving news
+
+on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fj-poll
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run poller
+        env:
+          FJ_INFO_TOKEN: ${{ secrets.FJ_INFO_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BARK_DEVICE_KEY: ${{ secrets.BARK_DEVICE_KEY }}
+        run: node scripts/poll.mjs
+
+      - name: Commit updated state
+        run: |
+          git config user.name "fj-news-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add state.json
+          git diff --quiet --cached || git commit -m "Update last seen headline ID"
+          git push

@@ -1,0 +1,11 @@
+{
+  "name": "market-news-alert",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "poll": "node scripts/poll.mjs"
+  }
+}
